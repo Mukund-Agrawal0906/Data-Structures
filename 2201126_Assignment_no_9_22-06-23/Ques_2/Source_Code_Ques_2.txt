@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node{
+    int data;
+    struct Node* next;
+};
+
+struct Node* createNode(int data) {
+    struct Node* NewNode = (struct Node*)malloc(sizeof(struct Node));
+    NewNode->data = data;
+    NewNode->next = NULL;
+    return NewNode;
+}
+
+struct Node* insert(struct Node* root, int data) {
+    struct Node* NewNode = createNode(data);
+
+    if (root == NULL) {
+        return NewNode;
+    }
+
+    struct Node* temp = root;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = NewNode;
+
+    return root;
+}
+
+void heapify(struct Node* root) {
+    if (root == NULL || root->next == NULL)
+        return;
+
+    struct Node* temph = root;
+    struct Node* greater = temph;
+    struct Node* next = temph->next;
+
+    while (next != NULL) {
+        if (next->data > greater->data) {
+            greater = next;
+        }
+        next = next->next;
+    }
+
+    if (greater != temph) {
+        int temp = temph->data;
+        temph->data = greater->data;
+        greater->data = temp;
+        heapify(greater);
+    }
+}
+
+void buildMaxHeap(struct Node** root) {
+    struct Node* temp = *root;
+
+    while (temp != NULL) {
+        heapify(temp);
+        temp = temp->next;
+    }
+}
+
+void heapSort(struct Node** root) {
+    if (*root == NULL)
+        return;
+
+    buildMaxHeap(root);
+
+    struct Node* sortedList = NULL;
+
+    while (*root != NULL) {
+        struct Node* maxNode = *root;
+        *root = (*root)->next;
+        maxNode->next = sortedList;
+        sortedList = maxNode;
+
+        heapify(*root);
+    }
+
+    *root = sortedList;
+}
+
+void print_the_List(struct Node* root) {
+    while (root != NULL) {
+        printf("%d ", root->data);
+        root = root->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Node* root = NULL;
+    int n, data;
+
+    printf("Enter the number of elements: \n");
+    scanf("%d", &n);
+
+    if(n<1)
+    {
+        printf("Linked List Is empty \n");
+        return 0;
+    }
+
+    printf("Enter the elements: \n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &data);
+        root = insert(root, data);
+    }
+
+    printf("Original list: \n");
+    print_the_List(root);
+
+    heapSort(&root);
+
+    printf("Sorted list: \n");
+    print_the_List(root);
+
+    return 0;
+}

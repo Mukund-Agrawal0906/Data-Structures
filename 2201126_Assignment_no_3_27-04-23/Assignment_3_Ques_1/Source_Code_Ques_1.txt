@@ -1,0 +1,142 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct Node{
+    int data;
+    struct Node *next;
+};
+
+void create(struct Node **head)
+{
+    int c, ch;
+    struct Node *temp, *rear;
+ 
+    do
+    {
+        printf("Enter number: ");
+        scanf("%d", &c);
+        temp = (struct Node *)malloc(sizeof(struct Node));
+        temp->data = c;
+        temp->next = NULL;
+        if (*head == NULL)
+        {
+            *head = temp;
+        }
+        else
+        {
+            rear->next = temp;
+        }
+        rear = temp;
+        printf("Do you wish to continue [1/0]: ");
+        scanf("%d", &ch);
+    } while (ch != 0);
+    printf("\n");
+}
+
+void release(struct Node **head)
+{
+    struct Node *temp = *head;
+    temp = temp->next;
+    while ((*head) != NULL)
+    {
+        free(temp);
+        temp = *head;
+        (*head) = (*head)->next;
+    }
+}
+
+void makecycle(struct Node **p)
+{
+    struct Node *rear, *front;
+    int n, count = 0, i;
+ 
+    front = rear = *p;
+    while (rear->next != NULL)
+    {
+        rear = rear->next;
+        count++;
+    }
+    if (count)
+    {
+        n = rand() % count;
+    }
+    else
+    {
+        n = 1;
+    }
+    for (i = 0; i < n - 1; i++)
+    {
+        front = front->next;
+    }
+    rear->next = front;
+}
+
+int detectcycle(struct Node *head)
+{
+    int flag = 1, count = 1, i;
+    struct Node *p, *q;
+ 
+    p = q = head;
+    q = q->next;
+    while (1)
+    {
+        q = q->next;
+        if (flag)
+        {
+            p = p->next;
+        }
+        if (q == p)
+        {
+            
+            q = q->next;
+            while (q != p)
+            {
+                count++;
+                q = q->next;
+            }
+            q = p = head;
+            for (i = 0; i < count; i++)
+            {
+                q = q->next;
+            }
+            while (p != q)
+            {
+                p = p->next;
+                q = q->next;
+            }
+            q->next = NULL;
+ 
+            return 1;
+        }
+        else if (q->next == NULL)
+        {
+            return 0;
+        }
+        flag = !flag;
+    }
+}
+
+int main(){
+    struct Node *p = NULL;
+    int result;
+    int r;
+    printf("Enter data into the list\n");
+    create(&p);
+    printf("Do You Want to make Cycle [1-Yes/0-No]\n");
+    scanf("%d",&r);
+    if (r){
+        makecycle(&p);
+    } 
+    printf("Identifying if a cycle exists.\n");
+    result = detectcycle(p);
+    if (result)
+    {
+        printf("Cycle detected in the linked list.\n");
+    }
+    else
+    {
+        printf("No cycle detected in the linked list.\n");
+    }
+    release (&p);
+    return 0;
+}

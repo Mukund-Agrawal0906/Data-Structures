@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define max 10
+
+int Det(int Matrix[max][max], int size){
+    if (size==1){
+        return Matrix[0][0];
+    }
+    else if (size==2){
+        return Matrix[0][0]*Matrix[1][1]-Matrix[0][1]*Matrix[1][0];
+    }
+    else{
+        int det=0;
+        int SubMatrix[max][max];
+        int sign=1;
+        for (int k=0;k<size;k++){
+            int i=0,j=0;
+            for (int r=1;r<size;r++){
+                for (int c=0;c<size;c++){
+                    if (c==k){
+                        continue;
+                    }
+                    SubMatrix[i][j]=Matrix[r][c];
+                    j++;
+                    if (j==size-1){
+                        i++;
+                        j=0;
+                    }
+                }
+            }
+            det+=sign*Matrix[0][k]* Det(SubMatrix,size-1);
+            sign=-sign;
+        }
+        return det;
+    }
+    return 0;
+}
+
+
+
+int main(){
+    int n;
+    printf("Enter the order of the Matrix \n");
+    scanf("%d",&n);
+    int Matrix[max][max];
+    printf("Enter the elements of Matrix \n");
+    for (int i=0;i<n;i++){
+        for (int j=0;j<n;j++){
+            scanf("%d",&Matrix[i][j]);
+        }
+    }
+    int Determinant=Det(Matrix,n);
+    printf("The Determinant = %d \n",Determinant);
+
+    return 0;
+}

@@ -1,0 +1,41 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+
+int main(){
+    char Str[100];
+    char Str1[100];
+    printf("Enter the string \n");
+    gets(Str);
+    strrev(Str);
+    strcpy(Str1,Str);
+    char *start=Str;
+    char *end=Str;
+    char temp;
+    while (*start){
+        while (*end && *end!=' '){
+            end++;
+        }
+        char *wordend=end-1;
+        while (start<wordend){
+            temp=*start;
+            *start=*wordend;
+            *wordend=temp;
+            start++;
+            wordend--;            
+        }
+        start=end;
+        if (*start){
+            start++;
+        }
+        end=start;
+    }
+    printf("Reverse order of the words \n");
+    puts(Str);
+    printf("\nReverse the sentence \n");
+    puts(Str1);
+    return 0;
+}
+
+    
